@@ -39,9 +39,11 @@ NB: The link may change without notice
 
 ##Usage
 
-To use this package, simply declare the SagePay class like this;
+To use this package in your controller, simply declare the SagePay class like this:
 
-use SagePay;
+````use SagePay;````
+
+You can also simply use it in the ````routes.php```` file without declaring it.
 
 You can then use the example below to create a simple payment:
 ```
