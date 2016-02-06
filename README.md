@@ -83,7 +83,7 @@ On your view, you can use this form to place a booking:
 
 Another way to use it is to return the encryption code as JSON, this way you can build a RestFul application based on the package. I personally used it to create a RestFul Application using AngularJS.
 
-For more advanced usage, please visit <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> GitHub page as he is the original developer of the library. You can also contact me [HERE](mailto:kofi@kofikwarteng.com).
+For more advanced usage, please visit <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> GitHub page as he is the original developer of the library. You can also contact me <a href="mailto:kofi@kofikwarteng.com">HERE</a>.
 
 Thanks and happy coding.
 
