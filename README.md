@@ -27,7 +27,7 @@ After you are done, run this command in the root folder:
 
 ```$ php artisan vendor:publish --provider="Kofikwarteng\LaravelSagepay\SagepayServiceProvider"```
 
-Now locate the ```sagepay.php``` file found in your config folder. Edit the currency value and the Encryption password to your values. Make sure the Currency you enter is supported by SagePay.
+Now locate the ```sagepay.php``` file which can now be found in your config folder after running the command above. Edit the currency value and the Encryption password to your values. Make sure the Currency you enter is supported by SagePay.
 
 SagePay has two types of Encryption Keys, the test keys and the live keys. For development, the test keys are used. The test keys, together with the Test URL, provides a sandbox where you can test their payment system with your application by using fake credit card numbers.
 
