@@ -4,6 +4,11 @@ To my knowledge, Laravel lacks any SagePay Integration package. This was why I d
 
 This Package is based on <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> SagePay library. Credits goes to him for the development of such an awesome library for SagePay.
 
+## Requirements
+
+PHP 5.4 and higher. PHP7/HHVM is fully supported too.
+Laravel 5 (I have not tested it on Laravel 4 but it might work)
+
 ## Installation
 
 To install just use composer and run the command:
