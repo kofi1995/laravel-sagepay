@@ -14,15 +14,15 @@ Alternatively, you can add it to the require block in your ```$ composer.json```
 
 After, locate the app.php file which can be found in the config folder of your Laravel installation. Add these two lines:
 
-Add Kofikwarteng\LaravelSagepay\SagePayServiceProvider::class, to the list of providers
+Add ```Kofikwarteng\LaravelSagepay\SagePayServiceProvider::class,``` to the list of providers
 
-Add 'SagePay' => Kofikwarteng\LaravelSagepay\Facade\SagePayFacade::class, to the list of aliases
+Add ```'SagePay' => Kofikwarteng\LaravelSagepay\Facade\SagePayFacade::class,``` to the list of aliases
 
 After you are done, run this command in the root folder:
 
-$ php artisan vendor:publish --provider="Kofikwarteng\LaravelSagepay\SagepayServiceProvider"
+```$ php artisan vendor:publish --provider="Kofikwarteng\LaravelSagepay\SagepayServiceProvider"```
 
-Now locate the sagepay.php file found in your config folder. Edit the currency value and the Encryption password to your values. Make sure the Currency you enter is supported by SagePay.
+Now locate the ```sagepay.php``` file found in your config folder. Edit the currency value and the Encryption password to your values. Make sure the Currency you enter is supported by SagePay.
 
 SagePay has two types of Encryption Keys, the test keys and the live keys. For development, the test keys are used. The test keys, together with the Test URL, provides a sandbox where you can test their payment system with your application by using fake credit card numbers.
 
@@ -55,11 +55,11 @@ I believe this is very straight forward and easy to use. What the library does i
 
 To output the encrypted string simply call this method:
 
-$encrypted_code = SagePay::getCrypt();
+```$encrypted_code = SagePay::getCrypt();```
 
 To submit the encryption code to SagePay, you can do something like this using blade:
 
-return view ('pages.checkout', compact($encrypted_code ));
+``return view ('pages.checkout', compact($encrypted_code ));``
 
 On your view, you can use this form to place a booking:
 ```
