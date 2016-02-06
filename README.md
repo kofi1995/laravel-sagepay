@@ -2,7 +2,7 @@
 
 To my knowledge, Laravel lacks any SagePay Integration package. This was why I decided to write this package. The package integrates with the SagePay forms although I believe it can be integrated with the other versions of the SagePay payment. I will look into that.
 
-This Package is based on [tolzhabayev's](https://github.com/tolzhabayev/sagepayForm-php) SagePay library. Credits goes to him for the development of such an awesome library for SagePay.
+This Package is based on <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> SagePay library. Credits goes to him for the development of such an awesome library for SagePay.
 
 ## Installation
 
@@ -28,6 +28,7 @@ SagePay has two types of Encryption Keys, the test keys and the live keys. For d
 
 Here is a link to their test credit card numbers:
 http://www.sagepay.co.uk/support/12/36/test-card-details-for-your-test-transactions
+<a href="http://www.sagepay.co.uk/support/12/36/test-card-details-for-your-test-transactions" target="_blank">http://www.sagepay.co.uk/support/12/36/test-card-details-for-your-test-transactions</a>
 
 NB: The link may change without notice
 
@@ -75,7 +76,7 @@ On your view, you can use this form to place a booking:
 
 Another way to use it is to return the encryption code as JSON, this way you can build a RestFul application based on the package. I personally used it to create a RestFul Application using AngularJS.
 
-For more advanced usage, please visit [tolzhabayev's](https://github.com/tolzhabayev/sagepayForm-php) GitHub page as he is the original developer of the library. You can also contact me [HERE](mailto:kofi@kofikwarteng.com).
+For more advanced usage, please visit <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> GitHub page as he is the original developer of the library. You can also contact me [HERE](mailto:kofi@kofikwarteng.com).
 
 Thanks and happy coding.
 
