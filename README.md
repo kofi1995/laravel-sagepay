@@ -12,7 +12,7 @@ To install just use composer and run the command:
 
 Alternatively, you can add it to the require block in your ```$ composer.json``` file and run ```$ composer install``` or ```$ composer update```
 
-After, locate the app.php file which can be found in the config folder of your Laravel installation. Add these two lines:
+After, locate app.php file which can be found in the config folder of your Laravel installation. Add these two lines:
 
 Add ```Kofikwarteng\LaravelSagepay\SagePayServiceProvider::class,``` to the list of providers
 
