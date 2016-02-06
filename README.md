@@ -26,9 +26,9 @@ Now locate the ```sagepay.php``` file found in your config folder. Edit the curr
 
 SagePay has two types of Encryption Keys, the test keys and the live keys. For development, the test keys are used. The test keys, together with the Test URL, provides a sandbox where you can test their payment system with your application by using fake credit card numbers.
 
-Here is a link to their test credit card numbers:
+Here is a link to their test credit card numbers: 
 
-<a href="http://www.sagepay.co.uk/support/12/36/test-card-details-for-your-test-transactions" target="_blank">http://www.sagepay.co.uk/support/12/36/test-card-details-for-your-test-transactions</a>
+http://www.sagepay.co.uk/support/12/36/test-card-details-for-your-test-transactions
 
 NB: The link may change without notice
 
