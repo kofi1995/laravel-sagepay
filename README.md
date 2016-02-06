@@ -68,7 +68,7 @@ To output the encrypted string simply call this method:
 
 To submit the encryption code to SagePay, you can do something like this using blade:
 
-``return view ('pages.checkout', compact($encrypted_code ));``
+``return view ('pages.checkout', compact('encrypted_code' ));``
 
 On your view, you can use this form to place a booking:
 ```
