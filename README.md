@@ -7,6 +7,7 @@ This Package is based on <a href="https://github.com/tolzhabayev/sagepayForm-php
 ## Requirements
 
 PHP 5.4 and higher. PHP7/HHVM is fully supported too.
+
 Laravel 5 (I have not tested it on Laravel 4 but it might work)
 
 ## Installation
