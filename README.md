@@ -23,7 +23,7 @@ Add ```Kofikwarteng\LaravelSagepay\SagePayServiceProvider::class,``` to the list
 
 Add ```'SagePay' => Kofikwarteng\LaravelSagepay\Facade\SagePayFacade::class,``` to the list of aliases
 
-After you are done, run this command in the root folder:
+After you are done, run this command in your root Laravel directory:
 
 ```$ php artisan vendor:publish --provider="Kofikwarteng\LaravelSagepay\SagepayServiceProvider"```
 
