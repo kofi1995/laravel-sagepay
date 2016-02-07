@@ -84,6 +84,54 @@ On your view, you can use this form to place a booking:
 
 Another way to use it is to return the encryption code as JSON, this way you can build a RestFul application based on the package. I personally used it to create a RestFul Application using AngularJS.
 
+To check for success, sagepay attaches a url parameter called ```crypt``` to the success and failure url which is an encrypted string which can be decrypted to provide a success response. With this success response, you can mark a payment as paid in your database, send an email, etc. 
+
+The method I personally use is to create a route with a order token parameter (the order token is just a token string I generate per order and store in the database). An example will be:
+
+````
+SagePay::setSuccessURL('https://localhost/laravel-shop/payment/' . $billing_token);
+SagePay::setFailureURL('https://localhost/laravel-shop/payment/' . $billing_token);
+````
+
+Mind you, this example is created with the intention that ````laravel-shop```` is your laravel installation folder. As you can see I set the success and failure URL to be the same url. There is no need creating separate routes. We then declare our routes like this:
+
+````
+Route::any('/payment/{token}', function (Request $request, $token) {
+    
+    if ($request->has('crypt')) {
+
+  $responseArray = SagePay::decode($request->get('crypt'));
+
+  //Check status of response
+  if($responseArray["Status"] === "OK"){
+    //payment was successful, your success code goes  here
+    //use the token to set order as paid
+    //redirect user to order success page
+    
+  }
+  elseif($responseArray["Status"] === "ABORT"){
+    //user aborted the payment, your abort code goes here, payment was not successful
+    //use the token to set order as aborted
+    //redirect user to order aborted page
+  }
+  else{
+    //payment was not successful for some strange reason
+   //use the token to set order as failed
+   //redirect user to order failed page
+  }
+
+
+}
+else{
+  //there was no crypt url parameter, user is probably trying to access this route directly without going through sagepay
+}
+});
+````
+
+
+
+
+
 For more advanced usage, please visit <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> GitHub page as he is the original developer of the library. You can also contact me <a href="mailto:kofi@kofikwarteng.com">HERE</a>.
 
 Thanks and happy coding.
