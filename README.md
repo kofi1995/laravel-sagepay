@@ -134,6 +134,8 @@ else{
 
 For more advanced usage, please visit <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> GitHub page as he is the original developer of the library. You can also contact me <a href="mailto:kofi@kofikwarteng.com">HERE</a>.
 
+I am working on various tests. They will be available soon once I'm done.
+
 Thanks and happy coding.
 
 
