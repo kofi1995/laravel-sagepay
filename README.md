@@ -1,6 +1,6 @@
 # Laravel 5.x Integration with SagePay
 
-To my knowledge, Laravel lacks any SagePay Integration package. This was why I decided to write this package. The package integrates with the SagePay forms although I believe it can be integrated with the server too since the class has fields for all those variables. I will look into that
+To my knowledge, Laravel lacks any SagePay Integration package. This was why I decided to write this package. The package integrates with the SagePay forms.
 
 This Package is based on <a href="https://github.com/tolzhabayev/sagepayForm-php" target="_blank">tolzhabayev's</a> SagePay library. Credits goes to him for the development of such an awesome library for SagePay.
 
