@@ -105,18 +105,18 @@ Route::any('/payment/{token}', function (Request $request, $token) {
   //Check status of response
   if($responseArray["Status"] === "OK"){
     //payment was successful, your success code goes  here
-    //use the token to set order as paid
+    //use $token to set order as paid
     //redirect user to order success page
     
   }
   elseif($responseArray["Status"] === "ABORT"){
     //user aborted the payment, your abort code goes here, payment was not successful
-    //use the token to set order as aborted
+    //use $token to set order as aborted
     //redirect user to order aborted page
   }
   else{
     //payment was not successful for some strange reason
-   //use the token to set order as failed
+   //use $token to set order as failed
    //redirect user to order failed page
   }
 
