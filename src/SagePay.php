@@ -4,13 +4,14 @@
  *
  * @author    Timur Olzhabayev, modified by Kofi Kwarteng for Laravel 5.x
  * @copyright Copyright (c) 2016 Kofi Kwarteng
+ * @link   https://github.com/kofispaceman/laravel-sagepay
  * @license   http://www.opensource.org/licenses/mit-license.php
  */
 
 namespace Kofikwarteng\LaravelSagepay;
 
 class SagePay {
-
+//declaring variables we are going to work with, remember, some are optional, refer to github's example as the required fields
 	protected $vendorTxCode;
 	protected $amount;
 	protected $currency;
@@ -53,11 +54,12 @@ class SagePay {
 	protected $language;
 	protected $website;
 
+//anytime the object is created, create a VendorTxCode. This code should be unique at all times.
 	public function __construct() {
 		$this->setVendorTxCode($this->createVendorTxCode());
 	}
 
-
+//get encryption string. Sagepay uses this string to identify your payment
 	public function getCrypt() {
 			$cryptString = 'VendorTxCode='.$this->getVendorTxCode();
 			$cryptString.= '&ReferrerID='.$this->getReferrerID();
@@ -108,18 +110,25 @@ class SagePay {
 	}
 
 
-
+//create random string to be used as the VendorTxCode, it should not contain more than 40 characters
 	protected function createVendorTxCode() {
 	 $timestamp = date("y-m-d-H-i-s", time());
 	 $random_number = rand(0,32000)*rand(0,32000);
 	 return "{$timestamp}-{$random_number}";
 	}
 
+/**
+* Code from here to next comment is to get and set the various sagepay parameters needed for payment
+* Function names are self explanatory
+*If you don't understand any of them, google their names with reference to sagepay. You would get information on them
+**/
+
 	public function setVendorTxCode($code) {
         $this->vendorTxCode = $code;
 
         return $this;
 	}
+
 	public function getVendorTxCode() {
 		return $this->vendorTxCode;
 	}
@@ -137,14 +146,17 @@ class SagePay {
 	public function getSuccessURL() {
 		return $this->successURL;
 	}
+
 	public function setSuccessURL($url) {
 		$this->successURL = $url;
 
         return $this;
     }
+
 	public function getFailureURL() {
 		return $this->failureURL;
 	}
+
 	public function setFailureURL($url) {
 		$this->failureURL = $url;
 
@@ -154,6 +166,7 @@ class SagePay {
 	public function getDescription() {
 		return $this->description;
 	}
+
 	public function setDescription($description) {
 		$this->description = mb_substr($description, 0, 100);
         return $this;
@@ -162,6 +175,7 @@ class SagePay {
 	public function getCustomerName() {
 		return $this->customerName;
 	}
+
 	public function setCustomerName($name) {
 		$this->customerName = $name;
 
@@ -171,6 +185,7 @@ class SagePay {
 	public function getCustomerEMail() {
 		return $this->customerEMail;
 	}
+
 	public function setCustomerEMail($email) {
 		$this->customerEMail = $email;
 
@@ -180,6 +195,7 @@ class SagePay {
 	public function getVendorEMail() {
 		return $this->vendorEMail;
 	}
+
 	public function setVendorEMail($email) {
 		$this->vendorEMail = $email;
 
@@ -189,6 +205,7 @@ class SagePay {
 	public function getSendEMail() {
 		return $this->sendEMail;
 	}
+
 	public function setSendEMail($sendEmail = 1) {
 		$this->sendEMail = $sendEmail;
 
@@ -198,6 +215,7 @@ class SagePay {
 	public function getEMailMessage() {
 		return $this->eMailMessage;
 	}
+
 	public function setEMailMessage($emailMessage) {
 		$this->eMailMessage = $emailMessage;
 
@@ -522,25 +540,27 @@ class SagePay {
 		$this->setDeliveryPhone($this->getBillingPhone());
 	}
 
-
+//this is used to decode the response string SagePay attaches to the success/failure url. It is attached as a parameter with the name 'crypt'
 	public function decode($strIn) {
 		$decodedString =  $this->decodeAndDecrypt($strIn);
 		parse_str($decodedString, $sagePayResponse);
 		return $sagePayResponse;
 	}
 
+//code to encrypt the payment data being submitted to sagepay
 	protected function encryptAndEncode($strIn) {
 		$strIn = $this->pkcs5_pad($strIn, 16);
 		return "@".bin2hex(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword')));
 	}
 
+//code to decrypt the response string SagePay attaches to the failure or success URL
 	protected function decodeAndDecrypt($strIn) {
 		$strIn = substr($strIn, 1);
 		$strIn = pack('H*', $strIn);
 		return mcrypt_decrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword'));
 	}
 
-
+//php mcrypt api does not PKCS#5 padding. This function solves that
 	protected function pkcs5_pad($text, $blocksize)	{
 		$pad = $blocksize - (strlen($text) % $blocksize);
 		return $text . str_repeat(chr($pad), $pad);

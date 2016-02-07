@@ -13,6 +13,7 @@ class SagepayServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+      //copy the package's config file to laravel's config directory
       $this->publishes([
     __DIR__.'/Config/sagepay.php' => config_path('sagepay.php'),
         ], 'config');
@@ -26,7 +27,9 @@ class SagepayServiceProvider extends ServiceProvider
      */
     public function register()
     {
+      //get the config from the config file, that way, we can have access to it in our Model
       $this->mergeConfigFrom( __DIR__.'/Config/sagepay.php', 'sagepay');
+
       $this->app['laravelsagepay'] = $this->app->share(function($app) {
   			return new SagePay;
   		});
