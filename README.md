@@ -100,31 +100,31 @@ Route::any('/payment/{token}', function (Request $request, $token) {
     
     if ($request->has('crypt')) {
 
-  $responseArray = SagePay::decode($request->get('crypt'));
+        $responseArray = SagePay::decode($request->get('crypt'));
 
-  //Check status of response
-  if($responseArray["Status"] === "OK"){
-    //payment was successful, your success code goes  here
-    //use $token to set order as paid
-    //redirect user to order success page
+        //Check status of response
+        if($responseArray["Status"] === "OK"){
+            //payment was successful, your success code goes  here
+            //use $token to set order as paid
+            //redirect user to order success page
     
-  }
-  elseif($responseArray["Status"] === "ABORT"){
-    //user aborted the payment, your abort code goes here, payment was not successful
-    //use $token to set order as aborted
-    //redirect user to order aborted page
-  }
-  else{
-    //payment was not successful for some strange reason
-   //use $token to set order as failed
-   //redirect user to order failed page
-  }
+            }
+        elseif($responseArray["Status"] === "ABORT"){
+            //user aborted the payment, your abort code goes here, payment was not successful
+            //use $token to set order as aborted
+            //redirect user to order aborted page
+            }
+        else{
+            //payment was not successful for some strange reason
+            //use $token to set order as failed
+            //redirect user to order failed page
+        }
 
 
-}
-else{
-  //there was no crypt url parameter, user is probably trying to access this route directly without going through sagepay
-}
+    }
+    else{
+        //there was no crypt url parameter
+        }
 });
 ````
 
