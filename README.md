@@ -72,7 +72,7 @@ To submit the encryption code to SagePay, you can do something like this using b
 
 On your view, you can use this form to place a booking:
 ```
-<form method="POST" id="SagePayForm" action="*https://test.sagepay.com/gateway/service/vspform-register.vsp*"> // replace test with live after you are done with development and want to receive real payments.
+<form method="POST" id="SagePayForm" action="https://test.sagepay.com/gateway/service/vspform-register.vsp"> // replace test with live after you are done with development and want to receive real payments.
 
     <input type="hidden" name="VPSProtocol" value= "3.00">
     <input type="hidden" name="TxType" value= "PAYMENT">
