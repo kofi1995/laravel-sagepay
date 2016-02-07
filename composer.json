@@ -11,7 +11,9 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+      "php": ">=5.5.9",
+    },
     "autoload": {
         "psr-4": {
             "Kofikwarteng\\LaravelSagepay\\": "src/"
