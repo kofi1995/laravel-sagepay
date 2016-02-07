@@ -16,7 +16,7 @@ To install just use composer and run the command:
 
 ```$ composer require kofikwarteng/laravel-sagepay```
 
-Alternatively, you can add ````"kofikwarteng/laravel-sagepay": "dev-master"```` to the require block in your ```$ composer.json``` file and run ```$ composer install``` or ```$ composer update```
+Alternatively, you can add ````"kofikwarteng/laravel-sagepay": "1.0.*"```` to the require block in your ```$ composer.json``` file and run ```$ composer install``` or ```$ composer update```
 
 After, locate app.php file which can be found in the config folder of your Laravel installation. Add these two lines:
 
