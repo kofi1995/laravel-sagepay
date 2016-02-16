@@ -4,7 +4,7 @@ namespace Kofikwarteng\LaravelSagepay;
 
 use Illuminate\Support\ServiceProvider;
 
-class SagepayServiceProvider extends ServiceProvider
+class SagePayServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
