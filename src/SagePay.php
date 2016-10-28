@@ -4,565 +4,1172 @@
  *
  * @author    Timur Olzhabayev, modified by Kofi Kwarteng for Laravel 5.x
  * @copyright Copyright (c) 2016 Kofi Kwarteng
- * @link   https://github.com/kofispaceman/laravel-sagepay
+ * @link      https://github.com/kofispaceman/laravel-sagepay
  * @license   http://www.opensource.org/licenses/mit-license.php
  */
 
 namespace Kofikwarteng\LaravelSagepay;
 
-class SagePay {
-//declaring variables we are going to work with, remember, some are optional, refer to github's example as the required fields
-	protected $vendorTxCode;
-	protected $amount;
-	protected $currency;
-	protected $description;
-	protected $successURL;
-	protected $failureURL;
-	protected $customerName;
-	protected $customerEMail;
-	protected $vendorEMail;
-	protected $sendEMail;
-	protected $eMailMessage;
-	protected $billingSurname;
-	protected $billingFirstnames;
-	protected $billingAddress1;
-	protected $billingAddress2;
-	protected $billingPostCode;
-	protected $billingCountry;
-	protected $billingCity;
-	protected $billingState;
-	protected $billingPhone;
-	protected $deliverySurname;
-	protected $deliveryFirstnames;
-	protected $deliveryAddress1;
-	protected $deliveryAddress2;
-	protected $deliveryCity;
-	protected $deliveryPostCode;
-	protected $deliveryCountry;
-	protected $deliveryState;
-	protected $deliveryPhone;
-	protected $basket;
-	protected $allowGiftAid;
-	protected $applyAVSCV2;
-	protected $apply3DSecure;
-	protected $billingAgreement;
-	protected $basketXML;
-	protected $customerXML;
-	protected $surchargeXML;
-	protected $vendorData;
-	protected $referrerID;
-	protected $language;
-	protected $website;
-
-//anytime the object is created, create a VendorTxCode. This code should be unique at all times.
-	public function __construct() {
-		$this->setVendorTxCode($this->createVendorTxCode());
-	}
-
-//get encryption string. Sagepay uses this string to identify your payment
-	public function getCrypt() {
-			$cryptString = 'VendorTxCode='.$this->getVendorTxCode();
-			$cryptString.= '&ReferrerID='.$this->getReferrerID();
-			$cryptString.= '&Amount='.$this->getAmount();
-			$cryptString.= '&Currency='.config('sagepay.currency');
-			$cryptString.= '&Description='.$this->getDescription();
-			$cryptString.= '&SuccessURL='.$this->getSuccessURL();
-			$cryptString.= '&FailureURL='.$this->getFailureURL();
-			$cryptString.= '&CustomerName='.$this->getCustomerName();
-			$cryptString.= '&CustomerEMail='.$this->getCustomerEMail();
-			$cryptString.= '&VendorEMail='.$this->getVendorEMail();
-			$cryptString.= '&SendEMail='.$this->getSendEMail();
-			$cryptString.= '&eMailMessage='.$this->getEMailMessage();
-			$cryptString.= '&BillingSurname='.$this->getBillingSurname();
-			$cryptString.= '&BillingFirstnames='.$this->getBillingFirstnames();
-			$cryptString.= '&BillingAddress1='.$this->getBillingAddress1();
-			$cryptString.= '&BillingAddress2='.$this->getBillingAddress2();
-			$cryptString.= '&BillingCity='.$this->getBillingCity();
-			$cryptString.= '&BillingPostCode='.$this->getBillingPostCode();
-			$cryptString.= '&BillingCountry='.$this->getBillingCountry();
-			$cryptString.= '&BillingState='.$this->getBillingState();
-			$cryptString.= '&BillingPhone='.$this->getBillingPhone();
-			$cryptString.= '&DeliverySurname='.$this->getDeliverySurname();
-			$cryptString.= '&DeliveryFirstnames='.$this->getDeliveryFirstnames();
-			$cryptString.= '&DeliveryAddress1='.$this->getDeliveryAddress1();
-			$cryptString.= '&DeliveryAddress2='.$this->getDeliveryAddress2();
-			$cryptString.= '&DeliveryCity='.$this->getDeliveryCity();
-			$cryptString.= '&DeliveryPostCode='.$this->getDeliveryPostCode();
-			$cryptString.= '&DeliveryCountry='.$this->getDeliveryCountry();
-			$cryptString.= '&DeliveryState='.$this->getDeliveryState();
-			$cryptString.= '&DeliveryPhone='.$this->getDeliveryPhone();
-			$cryptString.= '&Basket='.$this->getBasket();
-			$cryptString.= '&AllowGiftAid='.$this->getAllowGiftAid();
-			$cryptString.= '&ApplyAVSCV2='.$this->getApplyAVSCV2();
-			$cryptString.= '&Apply3DSecure='.$this->getApply3DSecure();
-			$cryptString.= '&BillingAgreement='.$this->getBillingAgreement();
-			$cryptString.= '&BasketXML='.$this->getBasketXML();
-			$cryptString.= '&CustomerXML='.$this->getCustomerXML();
-			$cryptString.= '&SurchargeXML='.$this->getSurchargeXML();
-			$cryptString.= '&VendorData='.$this->getVendorData();
-			$cryptString.= '&ReferrerID='.$this->getReferrerID();
-			$cryptString.= '&Language='.$this->getLanguage();
-			$cryptString.= '&Website='.$this->getWebsite();
-
-
-			return $this->encryptAndEncode($cryptString);
-
-	}
-
-
-//create random string to be used as the VendorTxCode, it should not contain more than 40 characters
-	protected function createVendorTxCode() {
-	 $timestamp = date("y-m-d-H-i-s", time());
-	 $random_number = rand(0,32000)*rand(0,32000);
-	 return "{$timestamp}-{$random_number}";
-	}
-
 /**
-* Code from here to next comment is to get and set the various sagepay parameters needed for payment
-* Function names are self explanatory
-*If you don't understand any of them, google their names with reference to sagepay. You would get information on them
-**/
+ * Class SagePay
+ *
+ * @property string $vendorTxCode
+ * @property string $amount
+ * @property string $currency
+ * @property string $description
+ * @property string $successURL
+ * @property string $failureURL
+ * @property string $customerName
+ * @property string $customerEMail
+ * @property string $vendorEMail
+ * @property string $sendEMail
+ * @property string $eMailMessage
+ * @property string $billingSurname
+ * @property string $billingFirstnames
+ * @property string $billingAddress1
+ * @property string $billingAddress2
+ * @property string $billingPostCode
+ * @property string $billingCountry
+ * @property string $billingCity
+ * @property string $billingState
+ * @property string $billingPhone
+ * @property string $deliverySurname
+ * @property string $deliveryFirstnames
+ * @property string $deliveryAddress1
+ * @property string $deliveryAddress2
+ * @property string $deliveryCity
+ * @property string $deliveryPostCode
+ * @property string $deliveryCountry
+ * @property string $deliveryState
+ * @property string $deliveryPhone
+ * @property string $basket
+ * @property string $allowGiftAid
+ * @property string $applyAVSCV2
+ * @property string $apply3DSecure
+ * @property string $billingAgreement
+ * @property string $basketXML
+ * @property string $customerXML
+ * @property string $surchargeXML
+ * @property string $vendorData
+ * @property string $referrerID
+ * @property string $language
+ * @property string $website
+ */
+/**
+ * Class SagePay
+ *
+ * @package Kofikwarteng\LaravelSagepay
+ */
+class SagePay
+{
+//declaring variables we are going to work with, remember, some are optional, refer to github's example as the required fields
+    /**
+     * @var
+     */
+    protected $vendorTxCode;
+    /**
+     * @var
+     */
+    protected $amount;
+    /**
+     * @var
+     */
+    protected $currency;
+    /**
+     * @var
+     */
+    protected $description;
+    /**
+     * @var
+     */
+    protected $successURL;
+    /**
+     * @var
+     */
+    protected $failureURL;
+    /**
+     * @var
+     */
+    protected $customerName;
+    /**
+     * @var
+     */
+    protected $customerEMail;
+    /**
+     * @var
+     */
+    protected $vendorEMail;
+    /**
+     * @var
+     */
+    protected $sendEMail;
+    /**
+     * @var
+     */
+    protected $eMailMessage;
+    /**
+     * @var
+     */
+    protected $billingSurname;
+    /**
+     * @var
+     */
+    protected $billingFirstnames;
+    /**
+     * @var
+     */
+    protected $billingAddress1;
+    /**
+     * @var
+     */
+    protected $billingAddress2;
+    /**
+     * @var
+     */
+    protected $billingPostCode;
+    /**
+     * @var
+     */
+    protected $billingCountry;
+    /**
+     * @var
+     */
+    protected $billingCity;
+    /**
+     * @var
+     */
+    protected $billingState;
+    /**
+     * @var
+     */
+    protected $billingPhone;
+    /**
+     * @var
+     */
+    protected $deliverySurname;
+    /**
+     * @var
+     */
+    protected $deliveryFirstnames;
+    /**
+     * @var
+     */
+    protected $deliveryAddress1;
+    /**
+     * @var
+     */
+    protected $deliveryAddress2;
+    /**
+     * @var
+     */
+    protected $deliveryCity;
+    /**
+     * @var
+     */
+    protected $deliveryPostCode;
+    /**
+     * @var
+     */
+    protected $deliveryCountry;
+    /**
+     * @var
+     */
+    protected $deliveryState;
+    /**
+     * @var
+     */
+    protected $deliveryPhone;
+    /**
+     * @var
+     */
+    protected $basket;
+    /**
+     * @var
+     */
+    protected $allowGiftAid;
+    /**
+     * @var
+     */
+    protected $applyAVSCV2;
+    /**
+     * @var
+     */
+    protected $apply3DSecure;
+    /**
+     * @var
+     */
+    protected $billingAgreement;
+    /**
+     * @var
+     */
+    protected $basketXML;
+    /**
+     * @var
+     */
+    protected $customerXML;
+    /**
+     * @var
+     */
+    protected $surchargeXML;
+    /**
+     * @var
+     */
+    protected $vendorData;
+    /**
+     * @var
+     */
+    protected $referrerID;
+    /**
+     * @var
+     */
+    protected $language;
+    /**
+     * @var
+     */
+    protected $website;
 
-	public function setVendorTxCode($code) {
+    /**
+     * SagePay constructor.
+     * Anytime the object is created, create a VendorTxCode. This code should be unique at all times.
+     */
+    public function __construct()
+    {
+        $this->setVendorTxCode($this->createVendorTxCode());
+        $this->setCurrency(config('sagepay.currency'));
+    }
+
+    /**
+     * get encryption string. Sagepay uses this string to identify your payment
+     *
+     * @return string
+     */
+    public function getCrypt()
+    {
+        $cryptString = 'VendorTxCode=' . $this->getVendorTxCode();
+        $cryptString .= '&ReferrerID=' . $this->getReferrerID();
+        $cryptString .= '&Amount=' . $this->getAmount();
+        $cryptString .= '&Currency=' . $this->getCurrency();
+        $cryptString .= '&Description=' . $this->getDescription();
+        $cryptString .= '&SuccessURL=' . $this->getSuccessURL();
+        $cryptString .= '&FailureURL=' . $this->getFailureURL();
+        $cryptString .= '&CustomerName=' . $this->getCustomerName();
+        $cryptString .= '&CustomerEMail=' . $this->getCustomerEMail();
+        $cryptString .= '&VendorEMail=' . $this->getVendorEMail();
+        $cryptString .= '&SendEMail=' . $this->getSendEMail();
+        $cryptString .= '&eMailMessage=' . $this->getEMailMessage();
+        $cryptString .= '&BillingSurname=' . $this->getBillingSurname();
+        $cryptString .= '&BillingFirstnames=' . $this->getBillingFirstnames();
+        $cryptString .= '&BillingAddress1=' . $this->getBillingAddress1();
+        $cryptString .= '&BillingAddress2=' . $this->getBillingAddress2();
+        $cryptString .= '&BillingCity=' . $this->getBillingCity();
+        $cryptString .= '&BillingPostCode=' . $this->getBillingPostCode();
+        $cryptString .= '&BillingCountry=' . $this->getBillingCountry();
+        $cryptString .= '&BillingState=' . $this->getBillingState();
+        $cryptString .= '&BillingPhone=' . $this->getBillingPhone();
+        $cryptString .= '&DeliverySurname=' . $this->getDeliverySurname();
+        $cryptString .= '&DeliveryFirstnames=' . $this->getDeliveryFirstnames();
+        $cryptString .= '&DeliveryAddress1=' . $this->getDeliveryAddress1();
+        $cryptString .= '&DeliveryAddress2=' . $this->getDeliveryAddress2();
+        $cryptString .= '&DeliveryCity=' . $this->getDeliveryCity();
+        $cryptString .= '&DeliveryPostCode=' . $this->getDeliveryPostCode();
+        $cryptString .= '&DeliveryCountry=' . $this->getDeliveryCountry();
+        $cryptString .= '&DeliveryState=' . $this->getDeliveryState();
+        $cryptString .= '&DeliveryPhone=' . $this->getDeliveryPhone();
+        $cryptString .= '&Basket=' . $this->getBasket();
+        $cryptString .= '&AllowGiftAid=' . $this->getAllowGiftAid();
+        $cryptString .= '&ApplyAVSCV2=' . $this->getApplyAVSCV2();
+        $cryptString .= '&Apply3DSecure=' . $this->getApply3DSecure();
+        $cryptString .= '&BillingAgreement=' . $this->getBillingAgreement();
+        $cryptString .= '&BasketXML=' . $this->getBasketXML();
+        $cryptString .= '&CustomerXML=' . $this->getCustomerXML();
+        $cryptString .= '&SurchargeXML=' . $this->getSurchargeXML();
+        $cryptString .= '&VendorData=' . $this->getVendorData();
+        $cryptString .= '&ReferrerID=' . $this->getReferrerID();
+        $cryptString .= '&Language=' . $this->getLanguage();
+        $cryptString .= '&Website=' . $this->getWebsite();
+
+
+        return $this->encryptAndEncode($cryptString);
+
+    }
+
+    /**
+     * Create random string to be used as the VendorTxCode, it should not contain more than 40 characters
+     *
+     * @return string
+     */
+    protected function createVendorTxCode()
+    {
+        $timestamp = date("y-m-d-H-i-s", time());
+        $random_number = rand(0, 32000) * rand(0, 32000);
+
+        return "{$timestamp}-{$random_number}";
+    }
+
+    /**
+     * Code from here to next comment is to get and set the various sagepay parameters needed for payment
+     * Function names are self explanatory
+     * If you don't understand any of them, google their names with reference to sagepay. You would get information on them
+     **/
+// <editor-fold desc="Getters and Setters">
+
+    /**
+     * Expects a valid currency eg.GBP
+     * @param $currency
+     * @return $this
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = strtoupper($currency);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param $code
+     * @return $this
+     */
+    public function setVendorTxCode($code)
+    {
         $this->vendorTxCode = $code;
 
         return $this;
-	}
+    }
 
-	public function getVendorTxCode() {
-		return $this->vendorTxCode;
-	}
+    /**
+     * @return mixed
+     */
+    public function getVendorTxCode()
+    {
+        return $this->vendorTxCode;
+    }
 
-	public function setAmount($amount) {
-		$this->amount = number_format($amount, 2);
+    /**
+     * @param $amount
+     * @return $this
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = number_format($amount, 2);
 
         return $this;
     }
 
-	public function getAmount() {
-		return $this->amount;
-	}
+    /**
+     * @return mixed
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
 
-	public function getSuccessURL() {
-		return $this->successURL;
-	}
+    /**
+     * @return mixed
+     */
+    public function getSuccessURL()
+    {
+        return $this->successURL;
+    }
 
-	public function setSuccessURL($url) {
-		$this->successURL = $url;
+    /**
+     * @param $url
+     * @return $this
+     */
+    public function setSuccessURL($url)
+    {
+        $this->successURL = $url;
 
         return $this;
     }
 
-	public function getFailureURL() {
-		return $this->failureURL;
-	}
+    /**
+     * @return mixed
+     */
+    public function getFailureURL()
+    {
+        return $this->failureURL;
+    }
 
-	public function setFailureURL($url) {
-		$this->failureURL = $url;
+    /**
+     * @param $url
+     * @return $this
+     */
+    public function setFailureURL($url)
+    {
+        $this->failureURL = $url;
 
         return $this;
     }
 
-	public function getDescription() {
-		return $this->description;
-	}
-
-	public function setDescription($description) {
-		$this->description = mb_substr($description, 0, 100);
-        return $this;
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
-	public function getCustomerName() {
-		return $this->customerName;
-	}
-
-	public function setCustomerName($name) {
-		$this->customerName = $name;
-
-        return $this;
-    }
-
-	public function getCustomerEMail() {
-		return $this->customerEMail;
-	}
-
-	public function setCustomerEMail($email) {
-		$this->customerEMail = $email;
+    /**
+     * @param $description
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $this->description = mb_substr($description, 0, 100);
 
         return $this;
     }
 
-	public function getVendorEMail() {
-		return $this->vendorEMail;
-	}
+    /**
+     * @return mixed
+     */
+    public function getCustomerName()
+    {
+        return $this->customerName;
+    }
 
-	public function setVendorEMail($email) {
-		$this->vendorEMail = $email;
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function setCustomerName($name)
+    {
+        $this->customerName = $name;
 
         return $this;
     }
 
-	public function getSendEMail() {
-		return $this->sendEMail;
-	}
+    /**
+     * @return mixed
+     */
+    public function getCustomerEMail()
+    {
+        return $this->customerEMail;
+    }
 
-	public function setSendEMail($sendEmail = 1) {
-		$this->sendEMail = $sendEmail;
+    /**
+     * @param $email
+     * @return $this
+     */
+    public function setCustomerEMail($email)
+    {
+        $this->customerEMail = $email;
 
         return $this;
     }
 
-	public function getEMailMessage() {
-		return $this->eMailMessage;
-	}
+    /**
+     * @return mixed
+     */
+    public function getVendorEMail()
+    {
+        return $this->vendorEMail;
+    }
 
-	public function setEMailMessage($emailMessage) {
-		$this->eMailMessage = $emailMessage;
+    /**
+     * @param $email
+     * @return $this
+     */
+    public function setVendorEMail($email)
+    {
+        $this->vendorEMail = $email;
 
         return $this;
     }
 
-	public function setBillingFirstnames($billingFirstnames) {
-		$this->billingFirstnames = $billingFirstnames;
+    /**
+     * @return mixed
+     */
+    public function getSendEMail()
+    {
+        return $this->sendEMail;
+    }
+
+    /**
+     * @param int $sendEmail
+     * @return $this
+     */
+    public function setSendEMail($sendEmail = 1)
+    {
+        $this->sendEMail = $sendEmail;
 
         return $this;
     }
 
-	public function getBillingFirstnames() {
-		return $this->billingFirstnames;
-	}
+    /**
+     * @return mixed
+     */
+    public function getEMailMessage()
+    {
+        return $this->eMailMessage;
+    }
 
-	public function setBillingSurname($billingSurname) {
-		$this->billingSurname = $billingSurname;
+    /**
+     * @param $emailMessage
+     * @return $this
+     */
+    public function setEMailMessage($emailMessage)
+    {
+        $this->eMailMessage = $emailMessage;
 
         return $this;
     }
 
-	public function getBillingSurname() {
-		return $this->billingSurname;
-	}
-
-	public function setBillingAddress1($billingAddress1) {
-		$this->billingAddress1 = $billingAddress1;
-
-        return $this;
-    }
-
-	public function getBillingAddress1() {
-		return $this->billingAddress1;
-	}
-
-	public function setBillingAddress2($billingAddress2) {
-		$this->billingAddress2 = $billingAddress2;
+    /**
+     * @param $billingFirstnames
+     * @return $this
+     */
+    public function setBillingFirstnames($billingFirstnames)
+    {
+        $this->billingFirstnames = $billingFirstnames;
 
         return $this;
     }
 
-	public function getBillingAddress2() {
-		return $this->billingAddress2;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingFirstnames()
+    {
+        return $this->billingFirstnames;
+    }
 
-	public function setBillingCity($billingCity) {
-		$this->billingCity = $billingCity;
+    /**
+     * @param $billingSurname
+     * @return $this
+     */
+    public function setBillingSurname($billingSurname)
+    {
+        $this->billingSurname = $billingSurname;
 
         return $this;
     }
 
-	public function getBillingCity() {
-		return $this->billingCity;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingSurname()
+    {
+        return $this->billingSurname;
+    }
 
-	public function setBillingPostCode($billingPostCode) {
-		$this->billingPostCode = $billingPostCode;
+    /**
+     * @param $billingAddress1
+     * @return $this
+     */
+    public function setBillingAddress1($billingAddress1)
+    {
+        $this->billingAddress1 = $billingAddress1;
 
         return $this;
     }
 
-	public function getBillingPostCode() {
-		return $this->billingPostCode;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingAddress1()
+    {
+        return $this->billingAddress1;
+    }
 
-	public function setBillingState($billingState) {
-		$this->billingState = $billingState;
+    /**
+     * @param $billingAddress2
+     * @return $this
+     */
+    public function setBillingAddress2($billingAddress2)
+    {
+        $this->billingAddress2 = $billingAddress2;
 
         return $this;
     }
 
-	public function getBillingState() {
-		return $this->billingState;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingAddress2()
+    {
+        return $this->billingAddress2;
+    }
 
-	public function getBillingCountry() {
-		return $this->billingCountry;
-	}
-	public function setBillingCountry($countryISO3166) {
-		$this->billingCountry = strtoupper($countryISO3166);
+    /**
+     * @param $billingCity
+     * @return $this
+     */
+    public function setBillingCity($billingCity)
+    {
+        $this->billingCity = $billingCity;
 
         return $this;
     }
 
-	public function setBillingPhone($phone) {
-		$this->billingPhone = $phone;
+    /**
+     * @return mixed
+     */
+    public function getBillingCity()
+    {
+        return $this->billingCity;
+    }
+
+    /**
+     * @param $billingPostCode
+     * @return $this
+     */
+    public function setBillingPostCode($billingPostCode)
+    {
+        $this->billingPostCode = $billingPostCode;
 
         return $this;
     }
 
-	public function getBillingPhone() {
-		return $this->billingPhone;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingPostCode()
+    {
+        return $this->billingPostCode;
+    }
 
-	public function setDeliverySurname($surname) {
-		$this->deliverySurname = $surname;
+    /**
+     * @param $billingState
+     * @return $this
+     */
+    public function setBillingState($billingState)
+    {
+        $this->billingState = $billingState;
 
         return $this;
     }
 
-	public function getDeliverySurname() {
-		return $this->deliverySurname;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingState()
+    {
+        return $this->billingState;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getBillingCountry()
+    {
+        return $this->billingCountry;
+    }
 
-	public function setDeliveryFirstnames($firstnames) {
-		$this->deliveryFirstnames = $firstnames;
+    /**
+     * @param $countryISO3166
+     * @return $this
+     */
+    public function setBillingCountry($countryISO3166)
+    {
+        $this->billingCountry = strtoupper($countryISO3166);
 
         return $this;
     }
 
-	public function getDeliveryFirstnames() {
-		return $this->deliveryFirstnames;
-	}
-
-	public function setDeliveryAddress1($address) {
-		$this->deliveryAddress1 = $address;
-
-        return $this;
-    }
-
-	public function getDeliveryAddress1() {
-		return $this->deliveryAddress1;
-	}
-
-	public function setDeliveryAddress2($address) {
-		$this->deliveryAddress2 = $address;
+    /**
+     * @param $phone
+     * @return $this
+     */
+    public function setBillingPhone($phone)
+    {
+        $this->billingPhone = $phone;
 
         return $this;
     }
 
-	public function getDeliveryAddress2() {
-		return $this->deliveryAddress2;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingPhone()
+    {
+        return $this->billingPhone;
+    }
 
-	public function setDeliveryCity($city) {
-		$this->deliveryCity = $city;
+    /**
+     * @param $surname
+     * @return $this
+     */
+    public function setDeliverySurname($surname)
+    {
+        $this->deliverySurname = $surname;
 
         return $this;
     }
 
-	public function getDeliveryCity() {
-		return $this->deliveryCity;
-	}
+    /**
+     * @return mixed
+     */
+    public function getDeliverySurname()
+    {
+        return $this->deliverySurname;
+    }
 
-	public function setDeliveryPostCode($zip) {
-		$this->deliveryPostCode = $zip;
+
+    /**
+     * @param $firstnames
+     * @return $this
+     */
+    public function setDeliveryFirstnames($firstnames)
+    {
+        $this->deliveryFirstnames = $firstnames;
 
         return $this;
     }
 
-	public function getDeliveryPostCode() {
-		return $this->deliveryPostCode;
-	}
+    /**
+     * @return mixed
+     */
+    public function getDeliveryFirstnames()
+    {
+        return $this->deliveryFirstnames;
+    }
 
-	public function setDeliveryCountry($country) {
-		$this->deliveryCountry = strtoupper($country);
+    /**
+     * @param $address
+     * @return $this
+     */
+    public function setDeliveryAddress1($address)
+    {
+        $this->deliveryAddress1 = $address;
 
         return $this;
     }
 
-	public function getDeliveryCountry() {
-		return $this->deliveryCountry;
-	}
+    /**
+     * @return mixed
+     */
+    public function getDeliveryAddress1()
+    {
+        return $this->deliveryAddress1;
+    }
 
-
-	public function setDeliveryState($state) {
-		$this->deliveryState = $state;
+    /**
+     * @param $address
+     * @return $this
+     */
+    public function setDeliveryAddress2($address)
+    {
+        $this->deliveryAddress2 = $address;
 
         return $this;
     }
 
-	public function getDeliveryState() {
-		return $this->deliveryState;
-	}
+    /**
+     * @return mixed
+     */
+    public function getDeliveryAddress2()
+    {
+        return $this->deliveryAddress2;
+    }
 
-	public function setDeliveryPhone($phone) {
-		$this->deliveryPhone = $phone;
+    /**
+     * @param $city
+     * @return $this
+     */
+    public function setDeliveryCity($city)
+    {
+        $this->deliveryCity = $city;
 
         return $this;
     }
 
-	public function getDeliveryPhone() {
-		return $this->deliveryPhone;
-	}
+    /**
+     * @return mixed
+     */
+    public function getDeliveryCity()
+    {
+        return $this->deliveryCity;
+    }
 
-	public function setBasket($basket) {
-		$this->basket = $basket;
+    /**
+     * @param $zip
+     * @return $this
+     */
+    public function setDeliveryPostCode($zip)
+    {
+        $this->deliveryPostCode = $zip;
 
         return $this;
     }
 
-	public function getBasket() {
-		return $this->basket;
-	}
+    /**
+     * @return mixed
+     */
+    public function getDeliveryPostCode()
+    {
+        return $this->deliveryPostCode;
+    }
 
-	public function setAllowGiftAid($allowGiftAid = 0) {
+    /**
+     * @param $country
+     * @return $this
+     */
+    public function setDeliveryCountry($country)
+    {
+        $this->deliveryCountry = strtoupper($country);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeliveryCountry()
+    {
+        return $this->deliveryCountry;
+    }
+
+
+    /**
+     * @param $state
+     * @return $this
+     */
+    public function setDeliveryState($state)
+    {
+        $this->deliveryState = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeliveryState()
+    {
+        return $this->deliveryState;
+    }
+
+    /**
+     * @param $phone
+     * @return $this
+     */
+    public function setDeliveryPhone($phone)
+    {
+        $this->deliveryPhone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeliveryPhone()
+    {
+        return $this->deliveryPhone;
+    }
+
+    /**
+     * @param $basket
+     * @return $this
+     */
+    public function setBasket($basket)
+    {
+        $this->basket = $basket;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBasket()
+    {
+        return $this->basket;
+    }
+
+    /**
+     * @param int $allowGiftAid
+     * @return $this
+     */
+    public function setAllowGiftAid($allowGiftAid = 0)
+    {
         $this->allowGiftAid = $allowGiftAid;
 
         return $this;
-	}
+    }
 
-	public function getAllowGiftAid() {
-		return $this->allowGiftAid;
-	}
+    /**
+     * @return mixed
+     */
+    public function getAllowGiftAid()
+    {
+        return $this->allowGiftAid;
+    }
 
-	public function setApplyAVSCV2($avsCV2 = 0) {
-		$this->applyAVSCV2 = $avsCV2;
+    /**
+     * @param int $avsCV2
+     * @return $this
+     */
+    public function setApplyAVSCV2($avsCV2 = 0)
+    {
+        $this->applyAVSCV2 = $avsCV2;
 
         return $this;
     }
 
-	public function getApplyAVSCV2() {
-		return $this->applyAVSCV2;
-	}
+    /**
+     * @return mixed
+     */
+    public function getApplyAVSCV2()
+    {
+        return $this->applyAVSCV2;
+    }
 
-	public function setApply3DSecure($apply3DSecure = 0) {
-		$this->apply3DSecure = $apply3DSecure;
+    /**
+     * @param int $apply3DSecure
+     * @return $this
+     */
+    public function setApply3DSecure($apply3DSecure = 0)
+    {
+        $this->apply3DSecure = $apply3DSecure;
 
         return $this;
     }
 
-	public function getApply3DSecure() {
-		return $this->apply3DSecure;
-	}
+    /**
+     * @return mixed
+     */
+    public function getApply3DSecure()
+    {
+        return $this->apply3DSecure;
+    }
 
 
-	public function setBillingAgreement ($billingAgreement = 0) {
-		$this->billingAgreement = $billingAgreement;
+    /**
+     * @param int $billingAgreement
+     * @return $this
+     */
+    public function setBillingAgreement($billingAgreement = 0)
+    {
+        $this->billingAgreement = $billingAgreement;
 
         return $this;
     }
 
-	public function getBillingAgreement() {
-		return $this->billingAgreement;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBillingAgreement()
+    {
+        return $this->billingAgreement;
+    }
 
 
-	public function setBasketXML ($basketXML) {
-		$this->basketXML = $basketXML;
+    /**
+     * @param $basketXML
+     * @return $this
+     */
+    public function setBasketXML($basketXML)
+    {
+        $this->basketXML = $basketXML;
 
         return $this;
     }
 
-	public function getBasketXML() {
-		return $this->basketXML;
-	}
+    /**
+     * @return mixed
+     */
+    public function getBasketXML()
+    {
+        return $this->basketXML;
+    }
 
-	public function setCustomerXML ($customerXML) {
-		$this->customerXML = $customerXML;
+    /**
+     * @param $customerXML
+     * @return $this
+     */
+    public function setCustomerXML($customerXML)
+    {
+        $this->customerXML = $customerXML;
 
         return $this;
     }
 
-	public function getCustomerXML() {
-		return $this->customerXML;
-	}
+    /**
+     * @return mixed
+     */
+    public function getCustomerXML()
+    {
+        return $this->customerXML;
+    }
 
-	public function setSurchargeXML ($surchargeXML) {
-		$this->surchargeXML = $surchargeXML;
+    /**
+     * @param $surchargeXML
+     * @return $this
+     */
+    public function setSurchargeXML($surchargeXML)
+    {
+        $this->surchargeXML = $surchargeXML;
 
         return $this;
     }
 
-	public function getSurchargeXML() {
-		return $this->surchargeXML;
-	}
+    /**
+     * @return mixed
+     */
+    public function getSurchargeXML()
+    {
+        return $this->surchargeXML;
+    }
 
-	public function setVendorData ($vendorData) {
-		$this->vendorData = $vendorData;
+    /**
+     * @param $vendorData
+     * @return $this
+     */
+    public function setVendorData($vendorData)
+    {
+        $this->vendorData = $vendorData;
 
         return $this;
     }
 
-	public function getVendorData() {
-		return $this->vendorData;
-	}
+    /**
+     * @return mixed
+     */
+    public function getVendorData()
+    {
+        return $this->vendorData;
+    }
 
-	public function setReferrerID ($referrerID) {
-		$this->referrerID = $referrerID;
+    /**
+     * @param $referrerID
+     * @return $this
+     */
+    public function setReferrerID($referrerID)
+    {
+        $this->referrerID = $referrerID;
 
         return $this;
     }
 
-	public function getReferrerID() {
-		return $this->referrerID;
-	}
+    /**
+     * @return mixed
+     */
+    public function getReferrerID()
+    {
+        return $this->referrerID;
+    }
 
 
-	public function setLanguage ($language) {
-		$this->language = $language;
+    /**
+     * @param $language
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
 
         return $this;
     }
 
-	public function getLanguage() {
-		return $this->language;
-	}
+    /**
+     * @return mixed
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
 
 
-	public function setWebsite ($website) {
-		$this->website = $website;
+    /**
+     * @param $website
+     * @return $this
+     */
+    public function setWebsite($website)
+    {
+        $this->website = $website;
 
         return $this;
     }
 
-	public function getWebsite() {
-		return $this->website;
-	}
+    /**
+     * @return mixed
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+// </editor-fold>
+
+    /**
+     * Sets all the delivery details as the billing information
+     */
+    public function setDeliverySameAsBilling()
+    {
+        $this->setDeliverySurname($this->getBillingSurname());
+        $this->setDeliveryFirstnames($this->getBillingFirstnames());
+        $this->setDeliveryAddress1($this->getBillingAddress1());
+        $this->setDeliveryAddress2($this->getBillingAddress2());
+        $this->setDeliveryCity($this->getBillingCity());
+        $this->setDeliveryPostCode($this->getBillingPostCode());
+        $this->setDeliveryCountry($this->getBillingCountry());
+        $this->setDeliveryState($this->getBillingState());
+        $this->setDeliveryPhone($this->getBillingPhone());
+    }
+
+    /**
+     * This is used to decode the response string SagePay attaches to the success/failure url. It is attached as a parameter with the name 'crypt'
+     *
+     * @param $strIn
+     * @return mixed
+     */
+    public function decode($strIn)
+    {
+        $decodedString = $this->decodeAndDecrypt($strIn);
+        parse_str($decodedString, $sagePayResponse);
+
+        return $sagePayResponse;
+    }
+
+    /**
+     * Code to encrypt the payment data being submitted to sagepay
+     *
+     * @param $strIn
+     * @return string
+     */
+    protected function encryptAndEncode($strIn)
+    {
+        $strIn = $this->pkcs5_pad($strIn, 16);
+
+        return "@" . bin2hex(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword')));
+    }
 
 
-	public function setDeliverySameAsBilling() {
-		$this->setDeliverySurname($this->getBillingSurname());
-		$this->setDeliveryFirstnames($this->getBillingFirstnames());
-		$this->setDeliveryAddress1($this->getBillingAddress1());
-		$this->setDeliveryAddress2($this->getBillingAddress2());
-		$this->setDeliveryCity($this->getBillingCity());
-		$this->setDeliveryPostCode($this->getBillingPostCode());
-		$this->setDeliveryCountry($this->getBillingCountry());
-		$this->setDeliveryState($this->getBillingState());
-		$this->setDeliveryPhone($this->getBillingPhone());
-	}
+    /**
+     * Code to decrypt the response string SagePay attaches to the failure or success URL
+     *
+     * @param $strIn
+     * @return string
+     */
+    protected function decodeAndDecrypt($strIn)
+    {
+        $strIn = substr($strIn, 1);
+        $strIn = pack('H*', $strIn);
 
-//this is used to decode the response string SagePay attaches to the success/failure url. It is attached as a parameter with the name 'crypt'
-	public function decode($strIn) {
-		$decodedString =  $this->decodeAndDecrypt($strIn);
-		parse_str($decodedString, $sagePayResponse);
-		return $sagePayResponse;
-	}
+        return mcrypt_decrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword'));
+    }
 
-//code to encrypt the payment data being submitted to sagepay
-	protected function encryptAndEncode($strIn) {
-		$strIn = $this->pkcs5_pad($strIn, 16);
-		return "@".bin2hex(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword')));
-	}
+    /**
+     * PHP mcrypt api does not PKCS#5 padding. This function solves that
+     *
+     * @param $text
+     * @param $blocksize
+     * @return string
+     */
+    protected function pkcs5_pad($text, $blocksize)
+    {
+        $pad = $blocksize - (strlen($text) % $blocksize);
 
-//code to decrypt the response string SagePay attaches to the failure or success URL
-	protected function decodeAndDecrypt($strIn) {
-		$strIn = substr($strIn, 1);
-		$strIn = pack('H*', $strIn);
-		return mcrypt_decrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword'));
-	}
-
-//php mcrypt api does not PKCS#5 padding. This function solves that
-	protected function pkcs5_pad($text, $blocksize)	{
-		$pad = $blocksize - (strlen($text) % $blocksize);
-		return $text . str_repeat(chr($pad), $pad);
-	}
+        return $text . str_repeat(chr($pad), $pad);
+    }
 }
