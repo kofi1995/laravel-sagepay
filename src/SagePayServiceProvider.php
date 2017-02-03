@@ -30,7 +30,7 @@ class SagePayServiceProvider extends ServiceProvider
       //get the config from the config file, that way, we can have access to it in our Model
       $this->mergeConfigFrom( __DIR__.'/Config/sagepay.php', 'sagepay');
 
-      $this->app['laravelsagepay'] = $this->app->share(function($app) {
+      $this->app['laravelsagepay'] = $this->app->singleton(function($app) {
   			return new SagePay;
   		});
     }
