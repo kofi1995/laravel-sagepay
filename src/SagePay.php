@@ -1139,7 +1139,7 @@ class SagePay
      */
     protected function encryptAndEncode($strIn)
     {
-        return "@" . bin2hex(openssl_encrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_PKCS1_PADDING, config('sagepay.encryptPassword')));
+        return "@" . bin2hex(openssl_encrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, config('sagepay.encryptPassword')));
     }
 
 
@@ -1153,6 +1153,6 @@ class SagePay
     {
         $strIn = substr($strIn, 1);
         $strIn = pack('H*', $strIn);
-        return openssl_decrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_PKCS1_PADDING, config('sagepay.encryptPassword'));
+        return openssl_decrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, config('sagepay.encryptPassword'));
     }
 }
