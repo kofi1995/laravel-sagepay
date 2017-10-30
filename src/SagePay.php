@@ -1139,9 +1139,7 @@ class SagePay
      */
     protected function encryptAndEncode($strIn)
     {
-        $strIn = $this->pkcs5_pad($strIn, 16);
-
-        return "@" . bin2hex(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword')));
+        return "@" . bin2hex(openssl_encrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, config('sagepay.encryptPassword')));
     }
 
 
@@ -1155,21 +1153,6 @@ class SagePay
     {
         $strIn = substr($strIn, 1);
         $strIn = pack('H*', $strIn);
-
-        return mcrypt_decrypt(MCRYPT_RIJNDAEL_128, config('sagepay.encryptPassword'), $strIn, MCRYPT_MODE_CBC, config('sagepay.encryptPassword'));
-    }
-
-    /**
-     * PHP mcrypt api does not PKCS#5 padding. This function solves that
-     *
-     * @param $text
-     * @param $blocksize
-     * @return string
-     */
-    protected function pkcs5_pad($text, $blocksize)
-    {
-        $pad = $blocksize - (strlen($text) % $blocksize);
-
-        return $text . str_repeat(chr($pad), $pad);
+        return openssl_decrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, config('sagepay.encryptPassword'));
     }
 }
