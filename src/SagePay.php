@@ -1137,10 +1137,13 @@ class SagePay
      * @param $strIn
      * @return string
      */
-    protected function encryptAndEncode($strIn)
-    {
-        return "@" . bin2hex(openssl_encrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, config('sagepay.encryptPassword')));
-    }
+ 	protected function encryptAndEncode($strIn) {
+		$strIn = $this->pkcs5_pad($strIn, 16);
+
+        $iv = config('sagepay.encryptPassword'); // Not a random value?
+        $crypt = openssl_encrypt($strIn, 'aes-128-cbc', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, $iv);
+        return '@' . bin2hex($crypt); // Not base64 encoding.
+	}
 
 
     /**
@@ -1149,10 +1152,8 @@ class SagePay
      * @param $strIn
      * @return string
      */
-    protected function decodeAndDecrypt($strIn)
-    {
-        $strIn = substr($strIn, 1);
-        $strIn = pack('H*', $strIn);
-        return openssl_decrypt($strIn, 'AES-128-CBC', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, config('sagepay.encryptPassword'));
-    }
+	protected function decodeAndDecrypt($strIn) {
+	    $strIn = hex2bin(substr($strIn, 1));
+        return openssl_decrypt($strIn, 'aes-128-cbc', config('sagepay.encryptPassword'), OPENSSL_RAW_DATA, $config['key']);
+	}
 }
